@@ -7,40 +7,40 @@ import { getBaseUrl, handleError } from 'src/core/helper/endpoint.helper';
 import { IReadableService } from 'src/core/abstracts/generic-repo.abstract';
 import type { IEndpointProps } from 'src/core/dtos/endpoint.props';
 import type { IElement, IEntity } from 'src/core/entities/generic.entity';
-import type { IEmployee } from 'src/core/entities/employee.entity';
+import type { ICustomer } from 'src/core/entities/customer.entity';
 
 @Injectable()
-export class EmployeeService implements IReadableService<IEmployee> {
+export class CustomerService implements IReadableService<ICustomer> {
   constructor(private readonly httpService: HttpService) {}
 
-  getAll(props: IEndpointProps): Observable<IElement<IEmployee>> {
+  getAll(props: IEndpointProps): Observable<IElement<ICustomer>> {
     const baseUrl = getBaseUrl();
-    const url = `${baseUrl}merchants/${props.mId}/employees`;
+    const url = `${baseUrl}merchants/${props.mId}/customers`;
 
     return this.httpService
-      .get<IElement<IEmployee>>(url, {
+      .get<IElement<ICustomer>>(url, {
         headers: {
           Authorization: props.key,
         },
       })
       .pipe(
-        map((response: AxiosResponse<IElement<IEmployee>>) => response.data),
+        map((response: AxiosResponse<IElement<ICustomer>>) => response.data),
         catchError((error: AxiosError) => handleError(error)),
       );
   }
 
-  get(props: IEndpointProps & IEntity): Observable<IEmployee> {
+  get(props: IEndpointProps & IEntity): Observable<ICustomer> {
     const baseUrl = getBaseUrl();
-    const url = `${baseUrl}/merchants/${props.mId}/employees/${props.id}`;
+    const url = `${baseUrl}/merchants/${props.mId}/customers/${props.id}`;
 
     return this.httpService
-      .get<IEmployee>(url, {
+      .get<ICustomer>(url, {
         headers: {
           Authorization: props.key,
         },
       })
       .pipe(
-        map((response: AxiosResponse<IEmployee>) => response.data),
+        map((response: AxiosResponse<ICustomer>) => response.data),
         catchError((error: AxiosError) => handleError(error)),
       );
   }

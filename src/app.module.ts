@@ -4,8 +4,12 @@ import { HttpModule } from '@nestjs/axios';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CloverMiddleware } from './core/middleware/clover.middleware';
-import { EmployeeModule } from './modules/employee/employee.module';
 import config from './config';
+
+import { EmployeeModule } from './modules/employee/employee.module';
+import { CustomerModule } from './modules/customer/customer.module';
+import { InventoryModule } from './modules/inventory/inventory.module';
+import { OrderModule } from './modules/order/order.module';
 
 @Module({
   imports: [
@@ -16,6 +20,9 @@ import config from './config';
     }),
     HttpModule,
     EmployeeModule,
+    CustomerModule,
+    InventoryModule,
+    OrderModule,
   ],
   controllers: [AppController],
   providers: [AppService],

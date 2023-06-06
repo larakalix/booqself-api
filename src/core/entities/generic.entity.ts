@@ -3,5 +3,6 @@ export interface IEntity {
 }
 
 export interface IElement<T> {
-  element: T;
+  elements: T[];
+  href: string;
 }
