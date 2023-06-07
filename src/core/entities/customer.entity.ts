@@ -1,4 +1,4 @@
-import type { IEntity } from './generic.entity';
+import type { IElement, IEntity } from './generic.entity';
 
 export interface ICustomer extends IEntity {
   href: string;
@@ -7,4 +7,17 @@ export interface ICustomer extends IEntity {
   lastName: string;
   marketingAllowed: boolean;
   customerSince: number;
+  emailAddresses: IElement<EmailAddressesElement>;
+  phoneNumbers: IElement<PhoneNumbersElement>;
+  emailAddressesList: EmailAddressesElement[];
+  phoneNumbersList: PhoneNumbersElement[];
+}
+
+export interface EmailAddressesElement {
+  emailAddress: string;
+  primaryEmail: boolean;
+}
+
+export interface PhoneNumbersElement {
+  phoneNumber: string;
 }

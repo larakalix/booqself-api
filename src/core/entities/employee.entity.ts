@@ -1,13 +1,13 @@
 import type { IEntity } from './generic.entity';
 
 export interface IEmployee extends IEntity {
-  href: string;
   name: string;
   nickname: string;
-  customId: string;
   email: string;
-  inviteSent: boolean;
   pin: string;
+  href: string;
+  customId: string;
+  inviteSent: boolean;
   role: EmployeeRole;
   isOwner: boolean;
   orders: IOrders;

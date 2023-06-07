@@ -15,7 +15,7 @@ export class CustomerService implements IReadableService<ICustomer> {
 
   getAll(props: IEndpointProps): Observable<IElement<ICustomer>> {
     const baseUrl = getBaseUrl();
-    const url = `${baseUrl}merchants/${props.mId}/customers`;
+    const url = `${baseUrl}merchants/${props.mId}/customers?expand=emailAddresses%2CphoneNumbers`;
 
     return this.httpService
       .get<IElement<ICustomer>>(url, {
@@ -25,6 +25,14 @@ export class CustomerService implements IReadableService<ICustomer> {
       })
       .pipe(
         map((response: AxiosResponse<IElement<ICustomer>>) => response.data),
+        map((data: IElement<ICustomer>) => ({
+          ...data,
+          elements: data.elements.map((element: ICustomer) => ({
+            ...element,
+            emailAddressesList: element.emailAddresses.elements,
+            phoneNumbersList: element.phoneNumbers.elements,
+          })),
+        })),
         catchError((error: AxiosError) => handleError(error)),
       );
   }
