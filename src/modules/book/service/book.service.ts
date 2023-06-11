@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { Observable, map, combineLatest } from 'rxjs';
+import { Observable, map, combineLatest, of } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
 import { EmployeeService } from 'src/modules/employee/service/employee.service';
 import { InventoryService } from 'src/modules/inventory/service/inventory.service';
+import { AppointmentService } from 'src/modules/appointment/service/appointment.service';
 import { appendQueryParams } from 'src/core/helper/url.helper';
 import type { IEndpointProps } from 'src/core/dtos/endpoint.props';
 import type {
@@ -18,9 +19,14 @@ export class BookService {
     private readonly httpService: HttpService,
     private readonly inventoryService: InventoryService,
     private readonly employeeService: EmployeeService,
+    private readonly appointmentService: AppointmentService,
   ) {}
 
-  getAll(props: IEndpointProps, justTenant?: boolean): Observable<IBook> {
+  getAll(
+    props: IEndpointProps,
+    justTenant?: boolean,
+    appointmentId?: string,
+  ): Observable<IBook> {
     const url = appendQueryParams(
       `${process.env.STRAPI_URL}/custom-tenant/${props.mId}`,
       { justTenant },
@@ -38,17 +44,20 @@ export class BookService {
         mId: props.mId,
         key: props.key,
       }),
+      appointment: this.appointmentService.getById({ appointmentId }),
     };
 
     const combinedObservable = combineLatest([
       observableBook.tenant,
       observableBook.services,
       observableBook.employees,
+      observableBook.appointment,
     ]).pipe(
-      map(([tenant, services, employees]) => ({
+      map(([tenant, services, employees, appointment]) => ({
         tenant,
         services,
         employees,
+        appointment,
       })),
     );
 

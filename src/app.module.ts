@@ -11,6 +11,7 @@ import { CustomerModule } from './modules/customer/customer.module';
 import { InventoryModule } from './modules/inventory/inventory.module';
 import { OrderModule } from './modules/order/order.module';
 import { BookModule } from './modules/book/book.module';
+import { AppointmentModule } from './modules/appointment/appointment.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { BookModule } from './modules/book/book.module';
     CustomerModule,
     InventoryModule,
     OrderModule,
+    AppointmentModule,
     BookModule,
   ],
   controllers: [AppController],

@@ -10,3 +10,7 @@ export interface IElement<T> {
 export interface ICreatedAt {
   createdAt: string;
 }
+
+export interface IDatable<T> {
+  data: T;
+}

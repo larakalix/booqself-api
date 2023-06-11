@@ -12,7 +12,8 @@ export class BookController {
     @Headers('merchantid') mId: string,
     @Headers('authorization') key: string,
     @Query('justTenant') justTenant: boolean,
+    @Query('appointmentId') appointmentId?: string,
   ): Observable<IBook> {
-    return this.service.getAll({ mId, key }, justTenant);
+    return this.service.getAll({ mId, key }, justTenant, appointmentId);
   }
 }
