@@ -4,7 +4,7 @@ import { MembershipService } from '../service/membership.service';
 import type { IDatable } from 'src/core/entities/generic.entity';
 import type { IMembership } from 'src/core/entities/membership.entity';
 
-@Controller('api/customers')
+@Controller('api/memberships')
 export class MembershipController {
   constructor(private readonly service: MembershipService) {}
 

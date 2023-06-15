@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Observable, map, combineLatest, of } from 'rxjs';
+import { Observable, map, combineLatest } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
 import { EmployeeService } from 'src/modules/employee/service/employee.service';
