@@ -14,3 +14,9 @@ export interface ICreatedAt {
 export interface IDatable<T> {
   data: T;
 }
+
+export interface IServiceable {
+  name: string;
+  cloverId: string;
+  price: string;
+}
