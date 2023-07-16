@@ -1,71 +1,86 @@
 import { Injectable } from '@nestjs/common';
-import { Observable, map, combineLatest } from 'rxjs';
-import { HttpService } from '@nestjs/axios';
-import { AxiosResponse } from 'axios';
+import axios from 'axios';
+import { TenantService } from 'src/modules/tenant/service/tenant.service';
 import { EmployeeService } from 'src/modules/employee/service/employee.service';
 import { InventoryService } from 'src/modules/inventory/service/inventory.service';
 import { AppointmentService } from 'src/modules/appointment/service/appointment.service';
-import { appendQueryParams } from 'src/core/helper/url.helper';
-import type { IEndpointProps } from 'src/core/dtos/endpoint.props';
-import type {
-  IBook,
-  IObservableBook,
-  ITenant,
-} from 'src/core/entities/book.entity';
+import { OrderService } from 'src/modules/order/service/order.service';
+import { LineItemService } from 'src/modules/lineItem/service/line-item.service';
+import { handleError } from 'src/core/helper/endpoint.helper';
+import type { IEndpointProps } from 'src/core/dtos/endpoint';
+import type { IDatable } from 'src/core/entities/generic';
+import type { IBook } from 'src/core/entities/book';
+import type { IFormAppointment } from 'src/core/entities/appointment';
 
 @Injectable()
 export class BookService {
   constructor(
-    private readonly httpService: HttpService,
+    private readonly tenantService: TenantService,
     private readonly inventoryService: InventoryService,
     private readonly employeeService: EmployeeService,
     private readonly appointmentService: AppointmentService,
+    private readonly orderService: OrderService,
+    private readonly lineItemService: LineItemService,
   ) {}
 
-  getAll(
-    props: IEndpointProps,
+  async getBookBoilerplate(
+    { mId, key }: IEndpointProps,
     justTenant?: boolean,
     appointmentId?: string,
-  ): Observable<IBook> {
-    const url = appendQueryParams(
-      `${process.env.STRAPI_URL}/custom-tenant/${props.mId}`,
-      { justTenant },
-    );
+  ): Promise<IBook> {
+    const tenant = await this.tenantService.getById({ mId, key }, justTenant);
+    const services = await this.inventoryService.getAll({ mId, key });
+    const employees = await this.employeeService.getAll({ mId, key });
+    const appointment = await this.appointmentService.getById({
+      appointmentId,
+    });
 
-    const observableBook: IObservableBook = {
-      tenant: this.httpService
-        .get<ITenant>(url)
-        .pipe(map((response: AxiosResponse<ITenant>) => response.data)),
-      employees: this.employeeService.getAll({
-        mId: props.mId,
-        key: props.key,
-      }),
-      services: this.inventoryService.getAll({
-        mId: props.mId,
-        key: props.key,
-      }),
-      appointment: this.appointmentService.getById({ appointmentId }),
+    return {
+      tenant,
+      employees,
+      services,
+      appointment,
     };
+  }
 
-    const combinedObservable = combineLatest([
-      observableBook.tenant,
-      observableBook.services,
-      observableBook.employees,
-      observableBook.appointment,
-    ]).pipe(
-      map(([tenant, services, employees, appointment]) => ({
-        tenant,
-        services,
-        employees,
-        appointment,
-      })),
-    );
+  async bookAppointment(
+    { mId, key }: IEndpointProps,
+    {
+      appointment,
+    }: {
+      appointment: IFormAppointment;
+    },
+  ): Promise<IDatable<IFormAppointment>> {
+    const url = `${process.env.STRAPI_URL}/custom-appointment/create`;
 
-    return combinedObservable.pipe(
-      map((data) => ({
-        ...data,
-        tenant: { ...data.tenant },
-      })),
-    );
+    try {
+      const { data } = await axios.post<IDatable<IFormAppointment>>(
+        url,
+        {
+          ...appointment,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        },
+      );
+
+      // Create Clover Order
+      const order = await this.orderService.create({ mId, key }, appointment);
+      if (order.id) {
+        const lineItem = await this.lineItemService.create(
+          { mId, key, id: order.id },
+          appointment,
+        );
+
+        console.log('lineItem', lineItem);
+      }
+
+      return data as IDatable<IFormAppointment>;
+    } catch (error) {
+      handleError(error);
+      throw error;
+    }
   }
 }

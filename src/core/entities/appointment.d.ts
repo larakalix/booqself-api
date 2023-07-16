@@ -1,4 +1,4 @@
-import type { IEntity, IServiceable } from './generic.entity';
+import type { IEntity, IServiceable } from './generic';
 
 export interface IAppointment extends IEntity {
   attributes: IAppointmentAttributes;
@@ -23,3 +23,11 @@ export type IAppointmentEmployee = {
 };
 
 export type IAppointmentService = IServiceable;
+
+export type IFormAppointment = Partial<IEntity> &
+  IAppointmentAttributes & {
+    cloverEmployeeId?: string;
+    cloverServiceId?: string;
+    employee: IAppointmentEmployee;
+    service: IAppointmentService;
+  };

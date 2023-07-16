@@ -1,4 +1,4 @@
-import type { IElement, IEntity } from './generic.entity';
+import type { IElement, IEntity } from './generic';
 
 export interface ICustomer extends IEntity {
   href: string;

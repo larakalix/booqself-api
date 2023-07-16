@@ -1,47 +1,42 @@
 import { Injectable } from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { AxiosError, AxiosResponse } from 'axios';
-import { HttpService } from '@nestjs/axios';
-import { catchError, map } from 'rxjs/operators';
+import axios from 'axios';
 import { getBaseUrl, handleError } from 'src/core/helper/endpoint.helper';
 import { IReadableService } from 'src/core/abstracts/generic-repo.abstract';
-import type { IEndpointProps } from 'src/core/dtos/endpoint.props';
-import type { IElement, IEntity } from 'src/core/entities/generic.entity';
-import type { IEmployee } from 'src/core/entities/employee.entity';
+import type { IEndpointProps } from 'src/core/dtos/endpoint';
+import type { IElement, IEntity } from 'src/core/entities/generic';
+import type { IEmployee } from 'src/core/entities/employee';
 
 @Injectable()
 export class EmployeeService implements IReadableService<IEmployee> {
-  constructor(private readonly httpService: HttpService) {}
-
-  getAll(props: IEndpointProps): Observable<IElement<IEmployee>> {
+  async getAll(props: IEndpointProps): Promise<IElement<IEmployee>> {
     const baseUrl = getBaseUrl();
     const url = `${baseUrl}merchants/${props.mId}/employees`;
 
-    return this.httpService
-      .get<IElement<IEmployee>>(url, {
-        headers: {
-          Authorization: props.key,
-        },
-      })
-      .pipe(
-        map((response: AxiosResponse<IElement<IEmployee>>) => response.data),
-        catchError((error: AxiosError) => handleError(error)),
-      );
+    try {
+      const { data } = await axios.get<IElement<IEmployee>>(url, {
+        headers: { Authorization: props.key },
+      });
+
+      return data;
+    } catch (error: any) {
+      handleError(error);
+      throw error;
+    }
   }
 
-  get(props: IEndpointProps & IEntity): Observable<IEmployee> {
+  async get(props: IEndpointProps & IEntity): Promise<IEmployee> {
     const baseUrl = getBaseUrl();
     const url = `${baseUrl}/merchants/${props.mId}/employees/${props.id}`;
 
-    return this.httpService
-      .get<IEmployee>(url, {
-        headers: {
-          Authorization: props.key,
-        },
-      })
-      .pipe(
-        map((response: AxiosResponse<IEmployee>) => response.data),
-        catchError((error: AxiosError) => handleError(error)),
-      );
+    try {
+      const { data } = await axios.get<IEmployee>(url, {
+        headers: { Authorization: props.key },
+      });
+
+      return data;
+    } catch (error: any) {
+      handleError(error);
+      throw error;
+    }
   }
 }

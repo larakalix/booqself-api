@@ -12,6 +12,8 @@ import { InventoryModule } from './modules/inventory/inventory.module';
 import { OrderModule } from './modules/order/order.module';
 import { BookModule } from './modules/book/book.module';
 import { AppointmentModule } from './modules/appointment/appointment.module';
+import { TenantModule } from './modules/tenant/tenant.module';
+import { LineItemModule } from './modules/lineItem/line-item.module';
 
 @Module({
   imports: [
@@ -27,6 +29,8 @@ import { AppointmentModule } from './modules/appointment/appointment.module';
     OrderModule,
     AppointmentModule,
     BookModule,
+    TenantModule,
+    LineItemModule,
   ],
   controllers: [AppController],
   providers: [AppService],

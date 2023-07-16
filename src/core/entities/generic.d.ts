@@ -15,6 +15,10 @@ export interface IDatable<T> {
   data: T;
 }
 
+export interface IAttributable<T> {
+  attributes: T;
+}
+
 export interface IServiceable {
   name: string;
   cloverId: string;

@@ -6,6 +6,9 @@ import { BookService } from './service/book.service';
 import { InventoryService } from '../inventory/service/inventory.service';
 import { EmployeeService } from '../employee/service/employee.service';
 import { AppointmentService } from '../appointment/service/appointment.service';
+import { TenantService } from '../tenant/service/tenant.service';
+import { OrderService } from '../order/service/order.service';
+import { LineItemService } from '../lineItem/service/line-item.service';
 
 @Module({
   imports: [HttpModule, ConfigModule],
@@ -15,6 +18,9 @@ import { AppointmentService } from '../appointment/service/appointment.service';
     InventoryService,
     EmployeeService,
     AppointmentService,
+    TenantService,
+    OrderService,
+    LineItemService,
     ConfigService,
   ],
 })

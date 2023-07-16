@@ -1,8 +1,8 @@
-import { Controller, Get, Headers, Param } from '@nestjs/common';
-import { Observable } from 'rxjs';
+import { Body, Controller, Get, Headers, Param, Post } from '@nestjs/common';
 import { OrderService } from '../service/order.service';
-import type { IElement } from 'src/core/entities/generic.entity';
-import type { IOrder } from 'src/core/entities/order.entity';
+import type { IElement } from 'src/core/entities/generic';
+import type { IOrder } from 'src/core/entities/order';
+import type { IFormAppointment } from 'src/core/entities/appointment';
 
 @Controller('api/orders')
 export class OrderController {
@@ -12,7 +12,7 @@ export class OrderController {
   getAllEmployees(
     @Headers('merchantid') mId: string,
     @Headers('authorization') key: string,
-  ): Observable<IElement<IOrder>> {
+  ): Promise<IElement<IOrder>> {
     return this.service.getAll({ mId, key });
   }
 
@@ -21,7 +21,16 @@ export class OrderController {
     @Headers('merchantid') mId: string,
     @Headers('authorization') key: string,
     @Param('id') id: string,
-  ): Observable<IOrder> {
+  ): Promise<IOrder> {
     return this.service.get({ mId, key, id });
+  }
+
+  @Post()
+  create(
+    @Headers('merchantid') mId: string,
+    @Headers('authorization') key: string,
+    @Body() appointment: IFormAppointment,
+  ): Promise<IOrder> {
+    return this.service.create({ mId, key }, appointment);
   }
 }

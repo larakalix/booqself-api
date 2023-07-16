@@ -1,26 +1,22 @@
 import { Injectable } from '@nestjs/common';
-import { Observable, map, of } from 'rxjs';
-import { AxiosResponse } from 'axios';
-import { HttpService } from '@nestjs/axios';
-import type { IAppointment } from 'src/core/entities/appointment.entity';
-import type { IDatable } from 'src/core/entities/generic.entity';
+import axios from 'axios';
+import { handleError } from 'src/core/helper/endpoint.helper';
+import type { IAppointment } from 'src/core/entities/appointment';
 
 @Injectable()
 export class AppointmentService {
-  constructor(private readonly httpService: HttpService) {}
-
-  getById(props: { appointmentId?: string }): Observable<IAppointment> {
-    if (!props.appointmentId) return of(null);
+  async getById(props: { appointmentId?: string }): Promise<IAppointment> {
+    if (!props.appointmentId) return null;
 
     const url = `${process.env.STRAPI_URL}/appointments/${props.appointmentId}?populate=*`;
 
-    return this.httpService
-      .get<IDatable<IAppointment>>(url)
-      .pipe(
-        map(
-          (response: AxiosResponse<IDatable<IAppointment>>) =>
-            response.data.data,
-        ),
-      );
+    try {
+      const { data } = await axios.get<IAppointment>(url);
+
+      return data;
+    } catch (error: any) {
+      handleError(error);
+      throw error;
+    }
   }
 }

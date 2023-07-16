@@ -1,8 +1,7 @@
 import { Controller, Get, Headers, Param } from '@nestjs/common';
-import { Observable } from 'rxjs';
 import { InventoryService } from '../service/inventory.service';
-import type { IElement } from 'src/core/entities/generic.entity';
-import type { IInventory } from 'src/core/entities/inventory.entity';
+import type { IElement } from 'src/core/entities/generic';
+import type { IInventory } from 'src/core/entities/inventory';
 
 @Controller('api/inventory')
 export class InventoryController {
@@ -12,7 +11,7 @@ export class InventoryController {
   getAllEmployees(
     @Headers('merchantid') mId: string,
     @Headers('authorization') key: string,
-  ): Observable<IElement<IInventory>> {
+  ): Promise<IElement<IInventory>> {
     return this.service.getAll({ mId, key });
   }
 
@@ -21,7 +20,7 @@ export class InventoryController {
     @Headers('merchantid') mId: string,
     @Headers('authorization') key: string,
     @Param('id') id: string,
-  ): Observable<IInventory> {
+  ): Promise<IInventory> {
     return this.service.get({ mId, key, id });
   }
 }

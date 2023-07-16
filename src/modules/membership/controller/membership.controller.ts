@@ -1,8 +1,7 @@
 import { Controller, Get, Headers } from '@nestjs/common';
-import { Observable } from 'rxjs';
 import { MembershipService } from '../service/membership.service';
-import type { IDatable } from 'src/core/entities/generic.entity';
-import type { IMembership } from 'src/core/entities/membership.entity';
+import type { IDatable } from 'src/core/entities/generic';
+import type { IMembership } from 'src/core/entities/membership';
 
 @Controller('api/memberships')
 export class MembershipController {
@@ -12,7 +11,7 @@ export class MembershipController {
   getAllEmployees(
     @Headers('merchantid') mId: string,
     @Headers('authorization') key: string,
-  ): Observable<IDatable<IMembership>> {
+  ): Promise<IDatable<IMembership>> {
     return this.service.getAll({ mId, key });
   }
 }

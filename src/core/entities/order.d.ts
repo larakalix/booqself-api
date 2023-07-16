@@ -1,4 +1,4 @@
-import { IElement } from './generic.entity';
+import { IElement } from './generic';
 
 export interface IOrder {
   href: string;

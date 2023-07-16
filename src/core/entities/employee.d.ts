@@ -1,4 +1,4 @@
-import type { IEntity } from './generic.entity';
+import type { IEntity } from './generic';
 
 export interface IEmployee extends IEntity {
   name: string;

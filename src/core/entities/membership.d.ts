@@ -1,4 +1,4 @@
-import type { IEntity, IServiceable } from './generic.entity';
+import type { IEntity, IServiceable } from './generic';
 
 export interface IMembership extends IEntity {
   name: string;

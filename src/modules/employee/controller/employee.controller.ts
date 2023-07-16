@@ -1,8 +1,7 @@
 import { Controller, Get, Headers, Param } from '@nestjs/common';
-import { Observable } from 'rxjs';
 import { EmployeeService } from '../service/employee.service';
-import type { IElement } from 'src/core/entities/generic.entity';
-import type { IEmployee } from 'src/core/entities/employee.entity';
+import type { IElement } from 'src/core/entities/generic';
+import type { IEmployee } from 'src/core/entities/employee';
 
 @Controller('api/employees')
 export class EmployeeController {
@@ -12,7 +11,7 @@ export class EmployeeController {
   getAllEmployees(
     @Headers('merchantid') mId: string,
     @Headers('authorization') key: string,
-  ): Observable<IElement<IEmployee>> {
+  ): Promise<IElement<IEmployee>> {
     return this.employeeService.getAll({ mId, key });
   }
 
@@ -21,7 +20,7 @@ export class EmployeeController {
     @Headers('merchantid') mId: string,
     @Headers('authorization') key: string,
     @Param('id') id: string,
-  ): Observable<IEmployee> {
+  ): Promise<IEmployee> {
     return this.employeeService.get({ mId, key, id });
   }
 }
