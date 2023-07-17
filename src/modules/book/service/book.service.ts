@@ -45,26 +45,14 @@ export class BookService {
 
   async bookAppointment(
     { mId, key }: IEndpointProps,
-    {
-      appointment,
-    }: {
-      appointment: IFormAppointment;
-    },
+    { appointment }: { appointment: IFormAppointment },
   ): Promise<IDatable<IFormAppointment>> {
     const url = `${process.env.STRAPI_URL}/custom-appointment/create`;
 
     try {
-      const { data } = await axios.post<IDatable<IFormAppointment>>(
-        url,
-        {
-          ...appointment,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        },
-      );
+      const { data } = await axios.post<IDatable<IFormAppointment>>(url, {
+        ...appointment,
+      });
 
       // Create Clover Order
       const order = await this.orderService.create({ mId, key }, appointment);
@@ -76,6 +64,26 @@ export class BookService {
 
         console.log('lineItem', lineItem);
       }
+
+      return data as IDatable<IFormAppointment>;
+    } catch (error) {
+      handleError(error);
+      throw error;
+    }
+  }
+
+  async updateAppointment(
+    { mId, key }: IEndpointProps,
+    { appointment }: { appointment: IFormAppointment },
+    id: string,
+  ): Promise<IDatable<IFormAppointment>> {
+    const url = `${process.env.STRAPI_URL}/custom-appointment/update/${id}`;
+
+    try {
+      const { data } = await axios.put<IDatable<IFormAppointment>>(url, {
+        ...appointment,
+        id,
+      });
 
       return data as IDatable<IFormAppointment>;
     } catch (error) {

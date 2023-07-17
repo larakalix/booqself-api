@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { handleError } from 'src/core/helper/endpoint.helper';
 import type { IAppointment } from 'src/core/entities/appointment';
+import { IDatable } from 'src/core/entities/generic';
 
 @Injectable()
 export class AppointmentService {
@@ -11,9 +12,13 @@ export class AppointmentService {
     const url = `${process.env.STRAPI_URL}/appointments/${props.appointmentId}?populate=*`;
 
     try {
-      const { data } = await axios.get<IAppointment>(url);
+      const { data } = await axios.get<IDatable<IAppointment>>(url);
 
-      return data;
+      const transformedData: IAppointment = {
+        ...data.data,
+      };
+
+      return transformedData;
     } catch (error: any) {
       handleError(error);
       throw error;

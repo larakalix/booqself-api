@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Headers, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Headers,
+  Param,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { BookService } from '../service/book.service';
 import type { IBook } from 'src/core/entities/book';
 import type { IDatable } from 'src/core/entities/generic';
@@ -29,5 +38,15 @@ export class BookController {
     @Body() appointment: IFormAppointment,
   ): Promise<IDatable<IFormAppointment>> {
     return this.service.bookAppointment({ mId, key }, { appointment });
+  }
+
+  @Put(':appointmentId')
+  updateAppointment(
+    @Headers('merchantid') mId: string,
+    @Headers('authorization') key: string,
+    @Body() appointment: IFormAppointment,
+    @Param('appointmentId') id: string,
+  ): Promise<IDatable<IFormAppointment>> {
+    return this.service.updateAppointment({ mId, key }, { appointment }, id);
   }
 }
