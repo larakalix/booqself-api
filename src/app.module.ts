@@ -10,9 +10,6 @@ import { EmployeeModule } from './modules/employee/employee.module';
 import { CustomerModule } from './modules/customer/customer.module';
 import { InventoryModule } from './modules/inventory/inventory.module';
 import { OrderModule } from './modules/order/order.module';
-import { BookModule } from './modules/book/book.module';
-import { AppointmentModule } from './modules/appointment/appointment.module';
-import { TenantModule } from './modules/tenant/tenant.module';
 import { LineItemModule } from './modules/lineItem/line-item.module';
 
 @Module({
@@ -27,9 +24,6 @@ import { LineItemModule } from './modules/lineItem/line-item.module';
     CustomerModule,
     InventoryModule,
     OrderModule,
-    AppointmentModule,
-    BookModule,
-    TenantModule,
     LineItemModule,
   ],
   controllers: [AppController],
