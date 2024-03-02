@@ -6,7 +6,7 @@ import { IReadableService } from 'src/core/abstracts/generic-repo.abstract';
 import type { IEndpointProps } from 'src/core/dtos/endpoint';
 import type { IElement, IEntity } from 'src/core/entities/generic';
 import type { IOrder } from 'src/core/entities/order';
-import type { IFormAppointment } from 'src/core/entities/appointment';
+import type { IAppointment } from 'src/core/entities/appointment';
 
 @Injectable()
 export class OrderService implements IReadableService<IOrder> {
@@ -56,7 +56,7 @@ export class OrderService implements IReadableService<IOrder> {
 
   async create(
     props: IEndpointProps,
-    appointment: IFormAppointment,
+    appointment: IAppointment,
   ): Promise<IOrder> {
     const baseUrl = getBaseUrl();
     const url = `${baseUrl}/merchants/${props.mId}/orders`;
@@ -65,10 +65,8 @@ export class OrderService implements IReadableService<IOrder> {
       const { data } = await axios.post<IOrder>(
         url,
         {
-          employee: { id: appointment.cloverEmployeeId },
-          total: parseInt(
-            appointment.service.price.replace(',', '').replace('.', ''),
-          ),
+          employee: { id: appointment.employee.cloverId },
+          total: appointment.service.price,
           paymentState: 'OPEN',
           title: appointment.service.name,
           state: 'open',

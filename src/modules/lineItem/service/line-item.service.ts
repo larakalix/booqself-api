@@ -4,13 +4,13 @@ import { getBaseUrl, handleError } from 'src/core/helper/endpoint.helper';
 import type { IEndpointProps } from 'src/core/dtos/endpoint';
 import type { IEntity } from 'src/core/entities/generic';
 import type { ILineItem } from 'src/core/entities/lineItem';
-import type { IFormAppointment } from 'src/core/entities/appointment';
+import type { IAppointment } from 'src/core/entities/appointment';
 
 @Injectable()
 export class LineItemService {
   async create(
     props: IEndpointProps & IEntity,
-    appointment: IFormAppointment,
+    appointment: IAppointment,
   ): Promise<ILineItem> {
     const baseUrl = getBaseUrl();
     const url = `${baseUrl}/merchants/${props.mId}/orders/${props.id}/line_items`;
@@ -21,9 +21,7 @@ export class LineItemService {
         {
           name: appointment.service.name,
           alternateName: appointment.service.name,
-          price: parseInt(
-            appointment.service.price.replace(',', '').replace('.', ''),
-          ),
+          price: appointment.service.price,
           unitQty: 1,
           isRevenue: true,
         },

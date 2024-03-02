@@ -2,7 +2,7 @@ import { Body, Controller, Get, Headers, Param, Post } from '@nestjs/common';
 import { OrderService } from '../service/order.service';
 import type { IElement } from 'src/core/entities/generic';
 import type { IOrder } from 'src/core/entities/order';
-import type { IFormAppointment } from 'src/core/entities/appointment';
+import type { IAppointment } from 'src/core/entities/appointment';
 
 @Controller('api/orders')
 export class OrderController {
@@ -29,7 +29,7 @@ export class OrderController {
   create(
     @Headers('merchantid') mId: string,
     @Headers('authorization') key: string,
-    @Body() appointment: IFormAppointment,
+    @Body() appointment: IAppointment,
   ): Promise<IOrder> {
     return this.service.create({ mId, key }, appointment);
   }
